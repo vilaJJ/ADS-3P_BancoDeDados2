@@ -1,0 +1,100 @@
+-- Depertamento
+
+INSERT INTO Departamentos VALUES 
+(1, 'Logí­stica'),
+(2, 'Transportes'),
+(3, 'Limpeza'),
+(4, 'Recursos Humanos'),
+(5, 'Informática'),
+(6, 'Financeiro'),
+(7, 'Jurídico'),
+(8, 'Marketing'),
+(9, 'Compras'),
+(10, 'Vendas'),
+(11, 'Administrativo ');
+
+-- Colaboradores
+
+INSERT INTO Colaboradores VALUES
+(1, 'João', 1500, 1),
+(2, 'Miguel', 1200, 1),
+(3, 'João', 1300, 1),
+(4, 'Teresa', 1500, 2),
+(5, 'Carlos', 1100, 2),
+(6, 'Maria', 1000, 2),
+(7, 'Filipa', 800, 2),
+(8, 'André', 1700, 3),
+(9, 'Tiago', 1200, 3),
+(10, 'Vasco', 1300, 3),
+(11, 'Sérgio', 1100, 3),
+(12, 'Joaquim', 1900, 3),
+(13, 'Diana', 1200, 4),
+(14, 'Manuel', 1600, 4),
+(15, 'Mariana', 1200, 5),
+(16, 'Marco', 1400, 5),
+(17, 'Hélder', 1100, 5),
+(18, 'Francisco', 1000, 5),
+(19, 'Fátima', 500, 5),
+(20, 'Joana', 500, 5),
+(21, 'Adeline', 2000, 6),
+(22, 'Aglailton', 2800, 6),
+(23, 'Alddo Gabriel', 2100, 7),
+(24, 'Aurea', 3000, 7),
+(25, 'Carlos Eduardo', 500, 8),
+(26, 'Darllan', 4500, 5),
+(27, 'Davi', 5100, 5),
+(28, 'Gabriel Lacerda', 6100, 8),
+(29, 'Guilherme', 8000, 9),
+(30, 'João Lucas', 790, 10),
+(31, 'Karoliny', 1560, 11),
+(32, 'Leidiane', 6789, 10),
+(33, 'Livia', 9871, 10),
+(34, 'Maria Luiza', 3567, 11),
+(35, 'Michel Plathiny', 8992, 7);
+
+-- Projetos 
+
+INSERT INTO Projetos VALUES 
+(1, 'XPTO', 1),
+(2, 'YPTO', 2),
+(3, 'ZPTO', 5),
+(4, 'VVZZ', 10),
+(5, 'SSPP', 8),
+(6, 'LLMM', 7),
+(7, 'PSDE', 7),
+(8, 'SVFR', 9),
+(9, 'WXZA', 5);
+
+ -- Trabalhos 
+
+INSERT INTO Trabalhos VALUES
+(1, 1, 4),
+(2, 1, 3),
+(5, 1, 4),
+(7, 1, 2),
+(10, 1, 1),
+(11, 1, 7),
+(13, 1, 3),
+(14, 1, 3),
+(20, 1, 6),
+(1, 2, 8),
+(2, 2, 7),
+(3, 2, 7),
+(4, 2, 2),
+(6, 2, 3),
+(11, 2, 2),
+(12, 2, 1),
+(14, 2, 3),
+(15, 2, 5),
+(17, 2, 4),
+(5, 3, 6),
+(12, 3, 3),
+(17, 3, 1),
+(18, 3, 2),
+(21, 4, 2),
+(22, 4, 2),
+(23, 5, 5),
+(25, 5, 6),
+(27, 6, 12),
+(28, 8, 11),
+(30, 8, 10);
