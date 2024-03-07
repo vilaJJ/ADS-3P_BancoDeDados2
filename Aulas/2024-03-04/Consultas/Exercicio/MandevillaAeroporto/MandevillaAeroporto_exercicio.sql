@@ -82,20 +82,7 @@ ORDER BY
     Codigo ASC;
 
 -- 7. Tendo em conta que não existe nenhum voo direto do aeroporto de código 1 (Porto) para o aeroporto de código 12 (Londres), liste todos as escalas possíveis (cód_voo1,cód_voo2, código_aeroporto_da_escala). Sugestão: Utilize os códigos dos aeroportos (1 e 12) na pesquisa.
-
-SELECT
-*,
-V1.Codigo,
-V2.Codigo
-FROM Voos AS V1
-INNER JOIN Voos AS V2
-INNER JOIN Aeroportos AS A_Origem
-ON V1.Aeroporto_Inicio = A_Origem.Codigo
-WHERE
-V1.Aeroporto_Inicio = 1 AND
-V2.Aeroporto_Fim = 12;
-
-
+-- Não consegui desenvolver
 
 -- 8. Quantos aeroportos há por país ordene a resposta por ordem decrescente (país, contagem)?
 
