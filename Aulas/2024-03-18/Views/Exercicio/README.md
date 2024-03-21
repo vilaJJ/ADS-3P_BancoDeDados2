@@ -1,5 +1,7 @@
 <h1>Exercício - <i>Views</i></h1>
 
+<img src="Images/database_diagram.png" alt="Diagrama do Banco de Dados">
+
 Questões para Prática de Criação de Views
 
 1. Crie uma view que liste todos os clientes que realizaram pelo menos uma locação.

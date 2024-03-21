@@ -26,10 +26,20 @@ SELECT * FROM Locacoes;
 
 -- Views
 
-SELECT * FROM View_ClientesComLocacao;          # 01
+SELECT * FROM View_ClientesComLocacao;                      # 01
 
-SELECT * FROM View_QntdBicicletasPorCidade;     # 02
+SELECT * FROM View_QntdBicicletasPorCidade;                 # 02
 
-SELECT * FROM View_ClientesSemLocacao;          # 12
+SELECT * FROMView_ClientesComMaisValoresPagosLocacoes;      # 05
 
-SELECT * FROM View_QntdLocacoesPorEstado;       # 15
+SELECT * View_ValorMedioLocacaoPorCidade;                   # 06
+
+SELECT * FROM View_ClientesPontosAcumulados;                # 08
+
+SELECT * FROM View_BicicletasMaisPopulares;                 # 10
+
+SELECT * FROM View_ClientesSemLocacao;                      # 12
+
+SELECT * FROM View_LucroTotalPorTipoBicicleta;              # 13
+
+SELECT * FROM View_QntdLocacoesPorEstado;                   # 15
