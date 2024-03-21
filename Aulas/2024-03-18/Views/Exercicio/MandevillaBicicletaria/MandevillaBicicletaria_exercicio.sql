@@ -71,6 +71,24 @@ GROUP BY
 ORDER BY
     C.Nome ASC; 
 
+-- 7. Crie uma view que liste todas as locações que começaram e terminaram no mesmo dia.
+
+SELECT
+*,
+L.Codigo AS 'Código',
+C.Nome AS 'Cliente',
+TB.Descricao AS 'Bicicleta',
+DATE_FORMAT(L.DataInicio, '%d/%m/%Y')
+FROM Locacoes AS L
+INNER JOIN Clientes AS C
+ON L.Cliente_Codigo = C.Codigo
+INNER JOIN Bicicletas AS B
+ON L.Bicicleta_Codigo = B.Codigo
+INNER JOIN TiposBicicletas AS TB
+ON B.TipoBicicleta_Codigo = TB.Codigo
+WHERE
+    DATEDIFF(L.DataInicio, L.DataFim) = 0;
+
 -- 8. Desenvolva uma view que mostre cada cliente e sua respectiva pontuação de bônus acumulada.
 
 CREATE VIEW View_ClientesPontosAcumulados
@@ -85,6 +103,19 @@ GROUP BY
     C.Codigo
 ORDER BY
     C.Nome ASC;
+
+-- 9. Elabore uma view que apresente o lucro total obtido com as locações para cada mês.
+
+CREATE VIEW View_LucroTotalLocacoesPorMes
+AS
+SELECT
+    MONTH(DataFim) AS 'Mês',
+    SUM(ValorTotal) AS 'Lucro total'
+FROM Locacoes
+GROUP BY
+    MONTH(DataFim)
+ORDER BY
+    MONTH(DataFim) ASC;
 
 -- 10. Crie uma view que mostre os tipos de bicicleta mais populares, baseando-se no número de vezes que foram alugadas.
 
@@ -139,6 +170,22 @@ INNER JOIN Locacoes AS L
     ON B.Codigo = L.Bicicleta_Codigo
 GROUP BY
     TB.Codigo
+ORDER BY
+    TB.Descricao ASC;
+
+-- 14. Desenvolva uma view que apresente a locação com a maior duração para cada tipo de bicicleta.
+
+CREATE VIEW View_MaiorTempoLocacaoPorTipoBicicleta
+AS
+SELECT
+    TB.Descricao AS 'Tipo de Bicicleta',
+    (MAX(TIMEDIFF(L.DataFim, L.DataInicio))) AS 'Maior tempo de locação (hh:mm:ss)'
+FROM TiposBicicletas AS TB
+INNER JOIN Bicicletas AS B
+    ON TB.Codigo = B.TipoBicicleta_Codigo
+INNER JOIN Locacoes AS L
+    ON B.Codigo = L.Bicicleta_Codigo
+GROUP BY TB.Codigo
 ORDER BY
     TB.Descricao ASC;
 
