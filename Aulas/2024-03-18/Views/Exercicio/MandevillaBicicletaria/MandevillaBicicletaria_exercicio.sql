@@ -38,6 +38,41 @@ GROUP BY
 ORDER BY
     C.Nome ASC;
 
+-- 3. Elabore uma view que calcule a média de duração (em horas) das locações para cada tipo de bicicleta.
+
+CREATE VIEW View_MediaHorasEmLocacaoPorTipoBicicleta
+AS
+SELECT
+    TB.Descricao AS 'Tipo de Bicicleta',
+    CAST(
+        AVG(
+            HOUR(TIMEDIFF(L.DataFim, L.DataInicio)) + 
+            (MINUTE(TIMEDIFF(L.DataFim, L.DataInicio)) / 60)
+        )
+        AS DECIMAL(10,1)
+    ) AS 'Média de horas em locação'
+    
+FROM TiposBicicletas AS TB
+INNER JOIN Bicicletas AS B
+ON TB.Codigo = B.TipoBicicleta_Codigo
+INNER JOIN Locacoes AS L
+ON B.Codigo = L.Bicicleta_Codigo
+GROUP BY
+    TB.Codigo;
+
+-- 4. Crie uma view que mostre o número total de locações realizadas em cada mês do ano.
+
+CREATE VIEW View_QntdLocacoesPorMes
+AS
+SELECT
+    MONTH(DataInicio) AS 'Mês',
+    COUNT(*) AS 'Quantidade de Locações'
+FROM Locacoes
+GROUP BY
+    MONTH(DataInicio)
+ORDER BY
+    MONTH(DataInicio) ASC;
+
 -- 5. Desenvolva uma view que liste os cinco clientes que mais realizaram locações, baseando-se no valor total gasto.
 
 CREATE VIEW View_ClientesComMaisValoresPagosLocacoes
@@ -73,21 +108,25 @@ ORDER BY
 
 -- 7. Crie uma view que liste todas as locações que começaram e terminaram no mesmo dia.
 
+CREATE VIEW View_LocacoesComInicioFimMesmoDia
+AS
 SELECT
-*,
-L.Codigo AS 'Código',
-C.Nome AS 'Cliente',
-TB.Descricao AS 'Bicicleta',
-DATE_FORMAT(L.DataInicio, '%d/%m/%Y')
+    L.Codigo AS 'Código',
+    C.Nome AS 'Cliente',
+    TB.Descricao AS 'Bicicleta',
+    DATE_FORMAT(L.DataInicio, '%d/%m/%Y') AS 'Data',
+    L.ValorTotal AS 'Valor'
 FROM Locacoes AS L
 INNER JOIN Clientes AS C
-ON L.Cliente_Codigo = C.Codigo
+    ON L.Cliente_Codigo = C.Codigo
 INNER JOIN Bicicletas AS B
-ON L.Bicicleta_Codigo = B.Codigo
+    ON L.Bicicleta_Codigo = B.Codigo
 INNER JOIN TiposBicicletas AS TB
-ON B.TipoBicicleta_Codigo = TB.Codigo
+    ON B.TipoBicicleta_Codigo = TB.Codigo
 WHERE
-    DATEDIFF(L.DataInicio, L.DataFim) = 0;
+    DATEDIFF(L.DataInicio, L.DataFim) = 0
+ORDER BY
+    L.Codigo ASC;
 
 -- 8. Desenvolva uma view que mostre cada cliente e sua respectiva pontuação de bônus acumulada.
 
@@ -136,6 +175,18 @@ ORDER BY
     COUNT(*) DESC, 
     TB.Descricao ASC;
 
+-- 11. Desenvolva uma view que analise os horários do dia com maior número de locações iniciadas.
+
+CREATE VIEW View_HorariosComMaisLocacoesIniciadas
+AS
+SELECT
+    HOUR(DataInicio) AS 'Hora de Início',
+    COUNT(*) AS 'Quantidade de Locações'
+FROM Locacoes
+GROUP BY
+    HOUR(DataInicio)
+ORDER BY
+    COUNT(*) DESC, HOUR(DataInicio) ASC;
 
 -- 12. Elabore uma view que identifique clientes que ainda não realizaram nenhuma locação.
 
