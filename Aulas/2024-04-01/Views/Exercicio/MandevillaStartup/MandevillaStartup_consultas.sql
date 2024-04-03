@@ -77,3 +77,15 @@ SELECT * FROM View_TopInvestors;
 -- 12. Elabore uma view ‘View_ProjectFeedback’ que mostre o feedback dos usuários para cada projeto, incluindo o nome do usuário, o título do projeto e os comentários.
 
 SELECT * FROM View_ProjectFeedback;
+
+-- 13. Crie uma view ‘View_FullProjectDetails’ que combine informações de projetos, investimentos, e avaliações, fornecendo uma visão completa de cada projeto.
+
+SELECT * FROM View_FullProjectDetails;
+
+-- 14. Desenvolva uma view ‘View_CategoryInvestments’ que mostre o total investido por categoria de projeto.
+
+SELECT * FROM View_CategoryInvestments;
+
+-- 15. Elabore uma view ‘View_UserActivity’ que indique a atividade de cada usuário, baseando-se na quantidade de investimentos feitos, projetos criados, e eventos participados.
+
+SELECT * FROM View_UserActivity;
