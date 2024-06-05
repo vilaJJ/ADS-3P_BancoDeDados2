@@ -13,12 +13,19 @@ INSERT INTO Clientes (Nome, Endereco, Telefone, Email) VALUES
 ('Carlos Santos', 'Rua XV de Novembro, 101', '4444-4444', 'carlos@exemplo.com'),
 ('Lucia Lima', 'Avenida Paulista, 202', '5555-5555', 'lucia@exemplo.com');
 
-INSERT INTO Produtos (Nome, Descricao, Preco, Estoque) VALUES
-('Brigadeiro', 'Doce de chocolate com granulado', 1.50, 100),
-('Beijinho', 'Doce de coco com açúcar', 1.50, 80),
-('Cajuzinho', 'Doce de amendoim com chocolate', 1.70, 60),
-('Bala de Coco', 'Bala de coco tradicional', 0.50, 200),
-('Pé de Moleque', 'Doce de amendoim caramelizado', 2.00, 50);
+INSERT INTO Fornecedores (Nome, Contato, Telefone, Email) VALUES
+('Fornecedor A', 'contatoA@exemplo.com', '6666-6666', 'contatoA@exemplo.com'),
+('Fornecedor B', 'contatoB@exemplo.com', '7777-7777', 'contatoB@exemplo.com'),
+('Fornecedor C', 'contatoC@exemplo.com', '8888-8888', 'contatoC@exemplo.com'),
+('Fornecedor D', 'contatoD@exemplo.com', '9999-9999', 'contatoD@exemplo.com'),
+('Fornecedor E', 'contatoE@exemplo.com', '1010-1010', 'contatoE@exemplo.com');
+
+INSERT INTO Produtos (Nome, FornecedorID, Descricao, Preco, Estoque) VALUES
+('Brigadeiro', 2, 'Doce de chocolate com granulado', 1.50, 100),
+('Beijinho', 3, 'Doce de coco com açúcar', 1.50, 80),
+('Cajuzinho', 3, 'Doce de amendoim com chocolate', 1.70, 60),
+('Bala de Coco', 1, 'Bala de coco tradicional', 0.50, 200),
+('Pé de Moleque', 4, 'Doce de amendoim caramelizado', 2.00, 50);
 
 INSERT INTO Pedidos (ClienteID, DataPedido) VALUES
 (1, '2024-05-01'),
@@ -38,10 +45,3 @@ INSERT INTO DetalhesPedidos (PedidoID, ProdutoID, Quantidade, Preco) VALUES
 (4, 3, 10, 1.70),
 (5, 4, 25, 0.50),
 (5, 5, 3, 2.00);
-
-INSERT INTO Fornecedores (Nome, Contato, Telefone, Email) VALUES
-('Fornecedor A', 'contatoA@exemplo.com', '6666-6666', 'contatoA@exemplo.com'),
-('Fornecedor B', 'contatoB@exemplo.com', '7777-7777', 'contatoB@exemplo.com'),
-('Fornecedor C', 'contatoC@exemplo.com', '8888-8888', 'contatoC@exemplo.com'),
-('Fornecedor D', 'contatoD@exemplo.com', '9999-9999', 'contatoD@exemplo.com'),
-('Fornecedor E', 'contatoE@exemplo.com', '1010-1010', 'contatoE@exemplo.com');

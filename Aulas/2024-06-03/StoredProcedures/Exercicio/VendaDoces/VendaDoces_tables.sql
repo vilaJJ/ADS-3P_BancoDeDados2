@@ -14,12 +14,24 @@ CREATE TABLE Clientes (
     Email VARCHAR(100)
 );
 
+CREATE TABLE Fornecedores (
+    FornecedorID INT PRIMARY KEY AUTO_INCREMENT,
+    Nome VARCHAR(100),
+    Contato VARCHAR(100),
+    Telefone VARCHAR(15),
+    Email VARCHAR(100)
+);
+
+
 CREATE TABLE Produtos (
     ProdutoID INT PRIMARY KEY AUTO_INCREMENT,
+    FornecedorID INT NOT NULL,
     Nome VARCHAR(100),
     Descricao TEXT,
     Preco DECIMAL(10, 2),
-    Estoque INT
+    Estoque INT,
+    CONSTRAINT FK_Produtos_Fornecedores FOREIGN KEY (FornecedorID) REFERENCES Fornecedores(FornecedorID)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Pedidos (
@@ -37,12 +49,4 @@ CREATE TABLE DetalhesPedidos (
     Preco DECIMAL(10, 2),
     FOREIGN KEY (PedidoID) REFERENCES Pedidos(PedidoID),
     FOREIGN KEY (ProdutoID) REFERENCES Produtos(ProdutoID)
-);
-
-CREATE TABLE Fornecedores (
-    FornecedorID INT PRIMARY KEY AUTO_INCREMENT,
-    Nome VARCHAR(100),
-    Contato VARCHAR(100),
-    Telefone VARCHAR(15),
-    Email VARCHAR(100)
 );

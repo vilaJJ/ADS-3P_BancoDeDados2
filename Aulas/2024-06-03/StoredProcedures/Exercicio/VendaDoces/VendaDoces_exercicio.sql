@@ -23,7 +23,7 @@ BEGIN
         Cliente ASC;
 END;
 
-DELIMITER;
+DELIMITER ;
 
 -- 2. Crie uma stored procedure que permita a inserção de um novo produto na tabela de produtos, passando os valores necessários como parâmetros.
 
@@ -34,7 +34,7 @@ BEGIN
     INSERT INTO `VendaDoces`.`Produtos`(Nome, Descricao, Preco, Estoque) VALUES (Nome, Descricao, Preco, Estoque);
 END;
 
-DELIMITER;
+DELIMITER ;
 
 -- 3. Crie uma stored procedure que atualize o preço de um produto específico na tabela de produtos, passando o ID do produto e o novo preço como parâmetros.
 
@@ -45,7 +45,7 @@ BEGIN
     UPDATE `VendaDoces`.`Produtos` SET Preco = NovoPreco WHERE ProdutoID = ProdutoID;
 END;
 
-DELIMITER;
+DELIMITER ;
 
 -- 4. Crie uma stored procedure que exclua um cliente da tabela de clientes, passando o ID do cliente como parâmetro.
 
@@ -57,7 +57,7 @@ BEGIN
     DELETE FROM `VendaDoces`.`Clientes` WHERE ClienteID = ClienteID;
 END;
 
-DELIMITER;
+DELIMITER ;
 
 -- 5. Crie uma stored procedure que conte o número de produtos disponíveis no estoque e retorne esse valor.
 
@@ -68,7 +68,7 @@ BEGIN
     SELECT SUM(Estoque) FROM `VendaDoces`.`Produtos` INTO Quantidade;
 END;
 
-DELIMITER;
+DELIMITER ;
 
 -- 6. Crie uma stored procedure que liste todos os pedidos feitos por um cliente específico, passando o ID do cliente como parâmetro.
 
@@ -96,4 +96,114 @@ BEGIN
         PE.DataPedido DESC;
 END;
 
-DELIMITER;
+DELIMITER ;
+
+-- 7. Crie uma stored procedure que calcule o valor total de um pedido específico, passando o ID do pedido como parâmetro e retornando o valor total.
+
+DELIMITER ##
+
+CREATE PROCEDURE CalcularValorTotalPedido (IN PedidoID INT, OUT ValorTotal DECIMAL(10,2))
+BEGIN
+    SELECT
+        SUM(DP.`Preco` * DP.`Quantidade`)
+    FROM `VendaDoces`.`Pedidos` AS PE
+    INNER JOIN `VendaDoces`.`DetalhesPedidos` AS DP
+        ON PE.`PedidoID` = DP.`PedidoID`
+    WHERE
+        PE.`PedidoID` = PedidoID
+    GROUP BY
+        PE.`PedidoID`
+    INTO ValorTotal;
+END;
+
+DELIMITER ;
+
+-- 8. Crie uma stored procedure que insira um novo pedido e os detalhes do pedido, passando os valores necessários como parâmetros.
+-- Incompleta
+
+DELIMITER ##
+
+CREATE PROCEDURE InserirNovoPedido (IN ClienteID INT, IN ProdutoID INT, IN Quantidade INT)
+BEGIN
+
+END;
+
+DELIMITER ;
+
+-- 9. Crie uma stored procedure que liste todos os produtos fornecidos por um fornecedor específico, passando o ID do fornecedor como parâmetro.
+
+DELIMITER ##
+
+CREATE PROCEDURE ListarProdutosPorFornecedor (IN FornecedorID INT)
+BEGIN
+    SELECT
+        PR.`ProdutoID` AS 'Código do Produto',
+        FO.`FornecedorID` AS 'Código do Fornecedor',
+        FO.`Nome` AS 'Fornecedor',
+        PR.`Nome` AS 'Produto',
+        PR.`Preco` AS 'Preço (R$)'
+    FROM `VendaDoces`.`Produtos` AS PR
+    INNER JOIN `VendaDoces`.`Fornecedores` AS FO
+        ON PR.`FornecedorID` = FO.`FornecedorID`
+    WHERE 
+        FO.`FornecedorID` = FornecedorID
+    GROUP BY
+        PR.`ProdutoID`
+    ORDER BY
+        PR.`ProdutoID` ASC,
+        FO.`FornecedorID` ASC,
+        PR.`Nome` ASC;
+END;
+
+DELIMITER ;
+
+-- 10. Crie uma stored procedure que atualize a quantidade em estoque de um produto específico, passando o ID do produto e a nova quantidade como parâmetros.
+
+DELIMITER ##
+
+CREATE PROCEDURE AtualizarEstoqueProduto (IN ProdutoID INT, IN Estoque INT)
+BEGIN
+    UPDATE `VendaDoces`.`Produtos` SET `Estoque` = Estoque WHERE `ProdutoID` = ProdutoID;
+END
+
+DELIMITER ;
+
+-- 11. Crie uma stored procedure que liste todos os produtos cujo estoque está abaixo de um determinado valor, passando o valor limite como parâmetro.
+
+DELIMITER ##
+
+CREATE PROCEDURE ListarProdutosAbaixoValorEstoque (IN ValorEstoque INT)
+BEGIN
+    SELECT
+        PR.`ProdutoID` AS 'Código do Produto',
+        FO.`FornecedorID` AS 'Código do Fornecedor',
+        FO.`Nome` AS 'Fornecedor',
+        PR.`Nome` AS 'Produto',
+        PR.`Estoque` AS 'Estoque',
+        PR.`Preco` AS 'Preço (R$)'
+    FROM `VendaDoces`.`Produtos` AS PR
+    INNER JOIN `VendaDoces`.`Fornecedores` AS FO
+        ON PR.`FornecedorID` = FO.`FornecedorID`
+    WHERE
+        PR.`Estoque` < ValorEstoque
+    GROUP BY
+        PR.`ProdutoID`
+    ORDER BY
+        PR.`ProdutoID` ASC,
+        FO.`FornecedorID` ASC,
+        PR.`Nome` ASC,
+        PR.`Estoque` DESC;
+END;
+
+DELIMITER ;
+
+-- 12. Crie uma stored procedure para listar os clientes que fizeram pedidos acima de um determinado valor.
+-- Incompleta
+
+DELIMITER ##
+
+SELECT
+*
+FROM `VendaDoces`.`Clientes` AS CL;
+
+DELIMITER ;
