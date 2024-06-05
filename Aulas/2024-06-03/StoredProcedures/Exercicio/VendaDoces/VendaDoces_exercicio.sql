@@ -29,9 +29,10 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE AdicionarProduto (IN Nome VARCHAR(100), IN Descricao TEXT, IN Preco DECIMAL(10,2), IN Estoque INT)
+CREATE PROCEDURE AdicionarProduto (IN IdFornecedor INT, IN Nome VARCHAR(100), IN Descricao TEXT, IN Preco DECIMAL(10,2), IN Estoque INT)
 BEGIN
-    INSERT INTO `VendaDoces`.`Produtos`(Nome, Descricao, Preco, Estoque) VALUES (Nome, Descricao, Preco, Estoque);
+    INSERT INTO `VendaDoces`.`Produtos`(FornecedorID, Nome, Descricao, Preco, Estoque) VALUES 
+    (IdFornecedor, Nome, Descricao, Preco, Estoque);
 END;
 
 DELIMITER ;
@@ -40,9 +41,9 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE AtualizarPrecoProduto (IN ProdutoID INT, IN NovoPreco DECIMAL(10,2))
+CREATE PROCEDURE AtualizarPrecoProduto (IN IdProduto INT, IN NovoPreco DECIMAL(10,2))
 BEGIN
-    UPDATE `VendaDoces`.`Produtos` SET Preco = NovoPreco WHERE ProdutoID = ProdutoID;
+    UPDATE `VendaDoces`.`Produtos` SET Preco = NovoPreco WHERE ProdutoID = IdProduto;
 END;
 
 DELIMITER ;
@@ -51,10 +52,10 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE ExcluirCliente (IN ClienteID INT)
+CREATE PROCEDURE ExcluirCliente (IN IdCliente INT)
 BEGIN
-    UPDATE `VendaDoces`.`Pedidos` SET ClienteID = null WHERE ClienteID = ClienteID;
-    DELETE FROM `VendaDoces`.`Clientes` WHERE ClienteID = ClienteID;
+    UPDATE `VendaDoces`.`Pedidos` SET ClienteID = null WHERE ClienteID = IdCliente;
+    DELETE FROM `VendaDoces`.`Clientes` WHERE ClienteID = IdCliente;
 END;
 
 DELIMITER ;
@@ -74,7 +75,7 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE ListarTodosPedidosPorCliente (IN ClienteID INT)
+CREATE PROCEDURE ListarTodosPedidosPorCliente (IN IdCliente INT)
 BEGIN
     SELECT
         PE.PedidoID as 'Código do Pedido',
@@ -89,7 +90,7 @@ BEGIN
     INNER JOIN `VendaDoces`.`Produtos` AS PR
         ON DP.ProdutoID = PR.ProdutoID
     WHERE
-        PE.ClienteID = ClienteID
+        PE.ClienteID = IdCliente
     GROUP BY
         PE.ClienteID
     ORDER BY
@@ -102,7 +103,7 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE CalcularValorTotalPedido (IN PedidoID INT, OUT ValorTotal DECIMAL(10,2))
+CREATE PROCEDURE CalcularValorTotalPedido (IN IdPedido INT, OUT ValorTotal DECIMAL(10,2))
 BEGIN
     SELECT
         SUM(DP.`Preco` * DP.`Quantidade`)
@@ -110,7 +111,7 @@ BEGIN
     INNER JOIN `VendaDoces`.`DetalhesPedidos` AS DP
         ON PE.`PedidoID` = DP.`PedidoID`
     WHERE
-        PE.`PedidoID` = PedidoID
+        PE.`PedidoID` = IdPedido
     GROUP BY
         PE.`PedidoID`
     INTO ValorTotal;
@@ -119,14 +120,46 @@ END;
 DELIMITER ;
 
 -- 8. Crie uma stored procedure que insira um novo pedido e os detalhes do pedido, passando os valores necessários como parâmetros.
--- Incompleta
 
 DELIMITER ##
 
-CREATE PROCEDURE InserirNovoPedido (IN ClienteID INT, IN ProdutoID INT, IN Quantidade INT)
+CREATE PROCEDURE InserirNovoPedido (IN IdCliente INT, IN IdProduto INT, IN Quantidade INT)
 BEGIN
+    DECLARE EstoqueDisponivel INT;
+    DECLARE IdPedido INT;
+    DECLARE DataPedido DATE;
+    DECLARE ValorProduto DECIMAL(10,2);
 
+    SELECT 
+        Estoque 
+    FROM `VendaDoces`.`Produtos` 
+    WHERE 
+        `ProdutoID` = IdProduto
+    INTO EstoqueDisponivel;
+
+    IF (Quantidade > EstoqueDisponivel) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'A quantidade de itens do pedido é maior que o estoque disponível.';
+    END IF;
+
+    SELECT CAST(NOW() AS DATE) INTO DataPedido;
+
+    SELECT 
+        Preco 
+    FROM `VendaDoces`.`Produtos` 
+    WHERE 
+        `ProdutoID` = IdProduto
+    INTO ValorProduto;
+
+    INSERT INTO `VendaDoces`.`Pedidos` (ClienteID, DataPedido) VALUES
+    (IdCliente, DataPedido);
+
+    SELECT CAST(LAST_INSERT_ID() AS INT) INTO IdPedido;
+
+    INSERT INTO `VendaDoces`.`DetalhesPedidos` (PedidoID, ProdutoID, Quantidade, Preco) VALUES
+    (IdPedido, IdProduto, Quantidade, ValorProduto);
 END;
+
+-- ClienteID, ProdutoID, Quantidade
 
 DELIMITER ;
 
@@ -134,7 +167,7 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE ListarProdutosPorFornecedor (IN FornecedorID INT)
+CREATE PROCEDURE ListarProdutosPorFornecedor (IN IdFornecedor INT)
 BEGIN
     SELECT
         PR.`ProdutoID` AS 'Código do Produto',
@@ -146,7 +179,7 @@ BEGIN
     INNER JOIN `VendaDoces`.`Fornecedores` AS FO
         ON PR.`FornecedorID` = FO.`FornecedorID`
     WHERE 
-        FO.`FornecedorID` = FornecedorID
+        FO.`FornecedorID` = IdFornecedor
     GROUP BY
         PR.`ProdutoID`
     ORDER BY
@@ -161,10 +194,10 @@ DELIMITER ;
 
 DELIMITER ##
 
-CREATE PROCEDURE AtualizarEstoqueProduto (IN ProdutoID INT, IN Estoque INT)
+CREATE PROCEDURE AtualizarEstoqueProduto (IN IdProduto INT, IN Estoque INT)
 BEGIN
-    UPDATE `VendaDoces`.`Produtos` SET `Estoque` = Estoque WHERE `ProdutoID` = ProdutoID;
-END
+    UPDATE `VendaDoces`.`Produtos` SET `Estoque` = Estoque WHERE `ProdutoID` = IdProduto;
+END;
 
 DELIMITER ;
 
@@ -198,12 +231,27 @@ END;
 DELIMITER ;
 
 -- 12. Crie uma stored procedure para listar os clientes que fizeram pedidos acima de um determinado valor.
--- Incompleta
 
 DELIMITER ##
 
-SELECT
-*
-FROM `VendaDoces`.`Clientes` AS CL;
+CREATE PROCEDURE ListarClientesPedidoAcimaValor (IN ValorPedido DECIMAL(10,2))
+BEGIN
+    SELECT
+        CL.`ClienteID` AS 'Código do Cliente',
+        CL.`Nome` AS 'Cliente'
+    FROM `VendaDoces`.`Clientes` AS CL
+    INNER JOIN `VendaDoces`.`Pedidos` AS PE
+        ON CL.`ClienteID` = PE.`ClienteID`
+    INNER JOIN `VendaDoces`.`DetalhesPedidos` AS DP
+        ON PE.`PedidoID` = DP.`PedidoID`
+    GROUP BY
+        PE.`PedidoID`,
+        CL.`ClienteID`
+    HAVING
+        SUM(DP.`Preco` * DP.`Quantidade`) > ValorPedido
+    ORDER BY
+        SUM(DP.`Preco` * DP.`Quantidade`) DESC,
+        CL.`Nome` ASC;
+END;
 
 DELIMITER ;
